@@ -18,17 +18,29 @@ private:
     template<class T>
     static std::unordered_map<const Column*, std::vector<T>> mitems;
 
+    /// @brief Indicates if Column of type T has already found all unique members inside Column
+    /// @tparam T Type of Column
+    template<class T>
+    static std::unordered_map<const Column*, bool> mhas_unique;
+
+    /// @brief Stored all unique member inside type T column as an vector of type T
+    /// @tparam T Type of Column
+    template<class T>
+    static std::unordered_map<const Column*, std::vector<T>> munique;
+
     /// @brief Type of Column
     MType mtype;
-
-    /// @brief States if unique values should be searched again
-    bool mrecalculate_uniques = false;
 
     /// @brief Gets max length inside of Column's vector of T
     /// @tparam T Type of Column vector
     /// @return Length of longest value of Column's vector of type T
     template<typename T>
-    int mgetValueLength(int index);
+    int mgetValueLength(int _index);
+
+    /// @brief Finds all unique members inside of type T column 
+    /// @tparam T Type of Column
+    template<class T>
+    void mfindUnique();
 
 public:
 
@@ -36,14 +48,14 @@ public:
     ///@tparam T Type of value added to Column's vector
     ///@brief Method used to add values to Column vector of type T
     template <class T>
-    void add(const T& t);
+    void add(const T& _t);
 
     /// @brief Get value of type T from vector in position index
     /// @tparam T Type of value
     /// @param index Position of value inside the vector
     /// @return Value of type T
     template <class T>
-    T get(int index);
+    T get(int _index);
 
     /// @brief Get vector from Column that is of type T
     /// @tparam T Type of vector
@@ -59,7 +71,7 @@ public:
 
     /// @brief Set type for Column
     /// @param type States type of Column
-    void setType(MType type);
+    void setType(MType _type);
 
     /// @brief Get the type that is set to Column
     /// @return MType that states the type of Column
@@ -76,10 +88,27 @@ public:
     template<class T>
     int getValueLength();
 
+    /// @brief Get number of unique member inside T type of Column vector
+    /// @tparam T type of Column
+    /// @return Number of unique members inside Column of type T
+    template<class T>
+    int getUniqueCount();
+
+    /// @brief Get all unique members inside Column of type T
+    /// @tparam T Type of column
+    /// @return Vector of type T with all unique values inside of type T column
+    template<class T>
+    std::vector<T> getUniques();
 };
 
 template<class T>
 std::unordered_map<const Column*, std::vector<T>> Column::mitems;
+
+template<class T>
+std::unordered_map<const Column*, bool> Column::mhas_unique;
+
+template<class T>
+std::unordered_map<const Column*, std::vector<T>> Column::munique;
 
 #include "../source/column.cpp"
 

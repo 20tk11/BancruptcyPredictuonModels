@@ -1,16 +1,16 @@
 #include "../headers/column.h"
 
 template <class T>
-void Column::add(const T& t)
+void Column::add(const T& _t)
 {
-    mrecalculate_uniques = false;
-    mitems<T>[this].push_back(t);
+    mhas_unique<T>[this] = false;
+    mitems<T>[this].push_back(_t);
 }
 
 template <class T>
-T Column::get(int index)
+T Column::get(int _index)
 {
-    return mitems<T>[this][index];
+    return mitems<T>[this][_index];
 }
 
 template <class T>
@@ -25,10 +25,9 @@ int Column::size()
     return mitems<T>[this].size();
 }
 
-void Column::setType(MType type)
+void Column::setType(MType _type)
 {
-    mrecalculate_uniques = false;
-    mtype = type;
+    mtype = _type;
 }
 
 MType Column::getType()
@@ -39,59 +38,105 @@ MType Column::getType()
 template <class T>
 void Column::clear()
 {
-    mrecalculate_uniques = false;
+    mhas_unique<T>[this] = false;
     mitems<T>[this].clear();
 }
 
 template<>
-int Column::mgetValueLength<int>(int index)
+int Column::mgetValueLength<int>(int _index)
 {
-    return std::to_string(get<int>(index)).size();
+    return std::to_string(get<int>(_index)).size();
 }
 
 template<>
-int Column::mgetValueLength<double>(int index)
+int Column::mgetValueLength<double>(int _index)
 {
-    int digit_count = 0;
-    std::string numStr = std::to_string(get<double>(index));
-    char element[numStr.size() + 1];
-    std::copy(numStr.begin(), numStr.end(), element);
+    int _digit_count = 0;
+    std::string _numStr = std::to_string(get<double>(_index));
+    char _element[_numStr.size() + 1];
+    std::copy(_numStr.begin(), _numStr.end(), _element);
 
-    for (char c : element)
+    for (char c : _element)
     {
         if(c == '.')
         {
             break;
         }
-        digit_count++;
+        _digit_count++;
     }
 
-    return digit_count;
+    return _digit_count;
 }
 
 template<>
-int Column::mgetValueLength<std::string>(int index)
+int Column::mgetValueLength<std::string>(int _index)
 {
-    return get<std::string>(index).size();
+    return get<std::string>(_index).size();
 }
 
 template<class T>
 int Column::getValueLength()
 {
-    int temp = 0;
-    int digitCount = 0;
+    int _temp = 0;
+    int _digit_count = 0;
 
     for (int i = 0; i < size<T>(); i++)
     {
-        int digit_count = mgetValueLength<T>(i);
+        int _digit_count = mgetValueLength<T>(i);
 
-        if ( digit_count > temp)
+        if ( _digit_count > _temp)
         {
-            temp = digit_count;
+            _temp = _digit_count;
         }
     }
     
-    return temp;
+    return _temp;
 }
 
+template<class T>
+int Column::getUniqueCount()
+{
+    if (!mhas_unique<T>[this])
+    {
+        mfindUnique<T>();
+        mhas_unique<T>[this] = true;     
+    }
 
+    return mitems<T>[this].size();
+}
+
+template<class T>
+std::vector<T> Column::getUniques()
+{
+    if (!mhas_unique<T>[this])
+    {
+        mfindUnique<T>();
+        mhas_unique<T>[this] = true;     
+    }
+
+    return mitems<T>[this];
+}
+
+template<class T>
+void Column::mfindUnique()
+{
+    for (int i = 0; i < size<T>(); i++)
+    {
+        bool _unique = true;
+        T _temp = get<T>(i);
+        
+        for (int j = 0; j < munique<T>[this].size(); j++)
+        {
+            if(_temp == munique<T>[this][j])
+            {
+                _unique = false;
+                break;
+            }
+        }
+
+        if (_unique)
+        {
+            munique<T>[this].push_back(_temp);
+        }
+    }
+}

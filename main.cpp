@@ -15,12 +15,15 @@ int main()
 
     col.setType(MType::TYPE_INTEGER);
     std::cout << col.getValueLength<std::string>() << std::endl;
+    std::cout << col.getUniqueCount<std::string>() << std::endl;
+    std::cout << col.getUniqueCount<std::string>() << std::endl;
+    col.add(std::string("^amfsdaas"));
+    std::cout << col.getUniqueCount<std::string>() << std::endl;
+    std::cout << col.getUniqueCount<std::string>() << std::endl;
+    std::vector<std::string> uniques = col.getUniques<std::string>();
+    return 0;
 }
 
 //HX_1,MX_1,SX_1,SX_2 - HEADERS
 //FLOAT,FLOAT,FLOAT,STRING - TYPES
-
-
-
-
 

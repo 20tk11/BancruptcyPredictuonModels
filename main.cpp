@@ -1,17 +1,20 @@
-#include "src/headers/Model.h"
+#include "src/headers/column.h"
 #include <iomanip>
 
 int main()
 {
-    Model model;
-    Dataframe c;
+    Column col;
 
-    //c.read_csv(file_path, true, false, ';');
-    model.read_data(file_path, true, false, ';');
-    c = model.get_data();
-    model.display();
-    c.display();
-    return 0;
+    col.add(std::string("Petras"));
+    col.add(std::string("^amfsdaas"));
+
+    std::cout << col.get<std::string>(0) << std::endl;
+    std::cout << col.get<std::string>(1) << std::endl;
+
+    std::vector<std::string> vec = col.getColumn<std::string>();
+
+    col.setType(MType::TYPE_INTEGER);
+    std::cout << col.getValueLength<std::string>() << std::endl;
 }
 
 //HX_1,MX_1,SX_1,SX_2 - HEADERS

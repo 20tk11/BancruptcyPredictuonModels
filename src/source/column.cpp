@@ -1,5 +1,11 @@
 #include "../headers/column.h"
 
+template<class T>
+void Column::setColumn(std::vector<T> _vec)
+{
+    mitems<T>[this] = _vec;
+}
+
 template <class T>
 void Column::add(const T& _t)
 {

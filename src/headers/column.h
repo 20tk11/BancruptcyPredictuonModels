@@ -1,5 +1,5 @@
-#ifndef Column_H
-#define Column_H
+#ifndef COLUMN_H
+#define COLUMN_H
 
 #include "mtype.h"
 #include "../../resources/constants.h"
@@ -43,6 +43,12 @@ private:
     void mfindUnique();
 
 public:
+
+    /// @brief Used to set vector to T type Column
+    /// @tparam T Type of Column vector
+    /// @param _vec Vector of type T
+    template<class T>
+    void setColumn(std::vector<T> _vec);
 
     ///@param t Value added to Column's vector
     ///@tparam T Type of value added to Column's vector
@@ -112,4 +118,4 @@ std::unordered_map<const Column*, std::vector<T>> Column::munique;
 
 #include "../source/column.cpp"
 
-#endif // Column_H
+#endif // COLUMN_H

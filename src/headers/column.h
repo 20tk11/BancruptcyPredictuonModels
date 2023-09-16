@@ -42,6 +42,18 @@ private:
     template<class T>
     void mfindUnique();
 
+    /// @brief Finds the length of longest std::string value inside column
+    /// @return Length of longest value inside std::string column
+    int getLongestString();
+
+    /// @brief Finds from how much digits the largest number is made of
+    /// @return Number of digits the largest integer is made of
+    int getLongestInt();
+
+    /// @brief Finds from how much digits the largest number is made of (applies precision .0000 5 symbols as digit count)
+    /// @return Number of digits the largest double is made of
+    int getLongestDouble();
+
 public:
 
     /// @brief Used to set vector to T type Column
@@ -105,6 +117,10 @@ public:
     /// @return Vector of type T with all unique values inside of type T column
     template<class T>
     std::vector<T> getUniques();
+
+    /// @brief Finds the number of symbols the logest values is made of inside column
+    /// @return Number of symbols the longest value is made of inside column
+    int getLongestLength();
 };
 
 template<class T>

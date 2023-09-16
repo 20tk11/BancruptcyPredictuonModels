@@ -39,7 +39,8 @@ int main()
 
     // std::cout << c["Column1"].get<double>(0) << std::endl;
 
-    c.readCSV(file_path, true, ';');
+    c.readTSV(file_path, true);
+    c.display();
 
     return 0;
 }

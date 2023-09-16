@@ -146,3 +146,93 @@ void Column::mfindUnique()
         }
     }
 }
+
+int Column::getLongestLength()
+{
+    if (this->mtype == MType::TYPE_DOUBLE)
+    {
+        return this->getLongestDouble();
+    }
+    else if (this->mtype == MType::TYPE_INTEGER)
+    {
+        return this->getLongestInt();
+    }
+    else
+    {
+        return this->getLongestString();
+    }
+
+    return 1;
+}
+
+int Column::getLongestString()
+{
+    int temp = 0;
+    int digit_count;
+
+    for(int i = 0; i < this->size<std::string>(); i++)
+    {
+        digit_count = this->get<std::string>(i).size();
+
+        if (digit_count > temp)
+        {
+            temp = digit_count;
+        }
+    }
+
+    return temp;
+}
+
+int Column::getLongestInt()
+{
+    int temp = 0;
+    int digit_count;
+    std::string num_str;
+
+    for(int i = 0; i < this->size<int>(); i++)
+    {
+        std::string num_str = std::to_string(this->get<int>(i));
+        digit_count = num_str.length();
+
+        if(digit_count > temp)
+        {
+            temp = digit_count;
+        }
+    }
+
+    return temp;
+}
+
+int Column::getLongestDouble()
+{
+    int temp = 0;
+    int digit_count;
+
+    for(int i = 0; i < this->size<double>(); i++)
+    {
+        digit_count = 0;
+
+        std::string temp_el = std::to_string(this->get<double>(i));
+        char element[temp_el.size() + 1];
+
+        std::copy(temp_el.begin(), temp_el.end(), element);
+
+        for (char c : element)
+        {
+            
+            if (c == '.')
+            {
+                break;
+            }
+
+            digit_count++;
+        }
+
+        if (digit_count > temp)
+        {
+            temp = digit_count;
+        }
+    }
+
+    return temp;
+}

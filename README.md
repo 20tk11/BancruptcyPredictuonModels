@@ -31,3 +31,6 @@
 
 ## 2. File structure is in progress
 ## 3. Documentation is required, if method is changed need to update documentation also
+## 4. TODO
+* Change constant value namings 
+* Change Column class method findLength for integer and double, that would search for max value and the find the number of digits the values is made of (Better efficiency).

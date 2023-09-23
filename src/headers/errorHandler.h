@@ -24,6 +24,8 @@ class ErrorHandler
         static int error_invalid_dataframe_dimensions(int _expected, int _size, std::string _invalid_element_err_type, int _row_index = 0);
 
         static int error_invalid_element_type(std::string _element, std::string _type);
+
+        static int error_invalid_quantile(double _quantile);
 };
 
 #include "../source/errorHandler.cpp"

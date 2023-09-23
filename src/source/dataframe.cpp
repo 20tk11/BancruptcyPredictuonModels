@@ -139,11 +139,6 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
         }
     }
     
-    for ( int i = 0; i < this->mcolumns.size(); i++)
-    {
-        std::cout << "|" << this->mcolumns[i] << "|" << " " << std::endl;
-    }
-     std::cout << "|" << this->mcolumns.size() << "|" << " " << std::endl;
     if (_types)
     {
         std::getline(_csv_file, line);
@@ -183,11 +178,11 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
             }
             if (!_types && this->msize == 0)
             {
-                if (this->misNumber(elements[i]))
+                if (Format::cisNumber(elements[i]))
                 {
                     this->mdataframe[this->mcolumns[i + 1]].setType(MType::TYPE_DOUBLE);
                 }
-                else if (this->mcheckNull(elements[i]))
+                else if (Format::ccheckNull(elements[i]))
                 {
                     this->mdataframe[this->mcolumns[i + 1]].setType(MType::TYPE_NONE);
                 }
@@ -201,11 +196,11 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
             {
                 if (this->mdataframe[this->mcolumns[i + 1]].getType() == MType::TYPE_DOUBLE)
                 {
-                    if (this->misNumber(elements[i]))
+                    if (Format::cisNumber(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(stod(elements[i]));
                     }
-                    else if (this->mcheckNull(elements[i]))
+                    else if (Format::ccheckNull(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(std::numeric_limits<double>::min());
                     }
@@ -231,11 +226,11 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
                 }
                 else if (this->mdataframe[this->mcolumns[i + 1]].getType() == MType::TYPE_INTEGER)
                 {
-                    if (this->misNumber(elements[i]))
+                    if (Format::cisNumber(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(stoi(elements[i]));
                     }
-                    else if (this->mcheckNull(elements[i]))
+                    else if (Format::ccheckNull(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(std::numeric_limits<int>::min());
                     }
@@ -263,13 +258,13 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
                 }
                 else if (this->mdataframe[this->mcolumns[i + 1]].getType() == MType::TYPE_NONE)
                 {
-                    if (this->mcheckNull(elements[i]))
+                    if (Format::ccheckNull(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(elements[i]);
                     }
                     else
                     {
-                        if(this->misNumber(elements[i]))
+                        if(Format::cisNumber(elements[i]))
                         {
                             for(int y = 0; y < this->mdataframe[this->mcolumns[i + 1]].size<std::string>(); y++)
                             {
@@ -291,12 +286,12 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
             {
                 if (this->mdataframe[this->mcolumns[i + 1]].getType() == MType::TYPE_DOUBLE)
                 {
-                    if (this->mcheckNull(elements[i]))
+                    if (Format::ccheckNull(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(std::numeric_limits<double>::min());
                         
                     }
-                    else if (this->misNumber(elements[i]))
+                    else if (Format::cisNumber(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(stod(elements[i]));
                     }
@@ -311,12 +306,12 @@ int Dataframe::readCSV(std::string _file_path, bool _headers, bool _types, char 
                 }
                 else if (this->mdataframe[this->mcolumns[i + 1]].getType() == MType::TYPE_INTEGER)
                 {
-                    if (this->mcheckNull(elements[i]))
+                    if (Format::ccheckNull(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(std::numeric_limits<int>::min());
                         
                     }
-                    else if (this->misNumber(elements[i]))
+                    else if (Format::cisNumber(elements[i]))
                     {
                         this->mdataframe[this->mcolumns[i + 1]].add(stoi(elements[i]));
                     }
@@ -476,6 +471,7 @@ void Dataframe::display(std::string _result_path)
 
     result_file << "  Size: " << this->msize;
 
+    result_file.close();
 }
 
 void Dataframe::mprintHeader(std::ofstream& _result_file, std::vector<int> _column_lengths)
@@ -577,7 +573,7 @@ void Dataframe::mprintContent(std::ofstream& _result_file, std::vector<int> _col
                 else
                 {
                     format << std::setw(_column_lengths[j] + (this->mdataframe[this->mcolumns[j]].get<std::string>(i).length() - 
-                        this->mutf8CharacterWidth(this->mdataframe[this->mcolumns[j]].get<std::string>(i)))) << this->mdataframe[this->mcolumns[j]].get<std::string>(i);
+                        Format::cutf8CharacterWidth(this->mdataframe[this->mcolumns[j]].get<std::string>(i)))) << this->mdataframe[this->mcolumns[j]].get<std::string>(i);
                 }
             } 
 
@@ -586,47 +582,6 @@ void Dataframe::mprintContent(std::ofstream& _result_file, std::vector<int> _col
 
         _result_file << format.str() << std::endl;
     }
-}
-
-bool Dataframe::misNumber(const std::string& _str)
-{
-    std::istringstream iss(_str);
-    double num;
-    iss >> std::noskipws >> num; // Try to convert to a number
-    return iss.eof() && !iss.fail();
-}
-
-bool Dataframe::mcheckNull(std::string _element)
-{
-    if (_element == "" || 
-        _element == "#NULL!" ||
-        _element == "NA")
-    {
-        return true;
-    }
-
-    return false;
-}
-
-int Dataframe::mutf8CharacterWidth(const std::string& _str)
-{
-    int count = 0;
-    for (size_t i = 0; i < _str.size(); ) {
-        unsigned char ch = _str[i];
-        if (ch < 0x80) {
-            i += 1;
-        } else if (ch < 0xE0) {
-            i += 2;
-        } else if (ch < 0xF0) {
-            i += 3;
-        } else if (ch < 0xF8) {
-            i += 4;
-        } else {
-            i += 1; // Invalid character, skip
-        }
-        count++;
-    }
-    return count;
 }
 
 int Dataframe::mgetPrecision(double _val)
@@ -662,4 +617,101 @@ int Dataframe::mgetPrecision(double _val)
 int Dataframe::size()
 {
     return this->size();
+}
+
+void Dataframe::analyseVariables()
+{
+    std::array<MDataType, 2> types;
+    double unique_count;
+    double null_percent;
+    int not_null_count;
+
+    for (int i = 1; i < this->mcolumns.size(); i++)
+    {
+        types = this->mdataframe[this->mcolumns[i]].getDataType();
+
+        
+
+        if (this->mdataframe[this->mcolumns[i]].getType() == MType::TYPE_DOUBLE)
+        {
+            unique_count = this->mdataframe[this->mcolumns[i]].getUniqueCount<double>();
+            not_null_count = this->mdataframe[this->mcolumns[i]].notNull<double>();
+            null_percent = not_null_count;
+            null_percent = null_percent / this->mdataframe[this->mcolumns[i]].size<double>() * 100;
+            double mean = this->mdataframe[this->mcolumns[i]].Mean<double>();
+
+            VariableResults variable_results(this->mcolumns[i], types[0], types[1], not_null_count, 
+                                                    null_percent, unique_count, 
+                                                    this->mdataframe[this->mcolumns[i]].min<double>(),
+                                                    this->mdataframe[this->mcolumns[i]].max<double>(),
+                                                    this->mdataframe[this->mcolumns[i]].quantile<double>(0.25),
+                                                    mean,
+                                                    this->mdataframe[this->mcolumns[i]].quantile<double>(0.5),
+                                                    this->mdataframe[this->mcolumns[i]].quantile<double>(0.75),
+                                                    this->mdataframe[this->mcolumns[i]].stdDev<double>(mean),
+                                                    "", "", "", "", "", "");
+
+            mvariable_results[this->mcolumns[i]] = variable_results;
+        }
+        else if (this->mdataframe[this->mcolumns[i]].getType() == MType::TYPE_STRING)
+        {
+            unique_count = this->mdataframe[this->mcolumns[i]].getUniqueCount<std::string>();
+            not_null_count = this->mdataframe[this->mcolumns[i]].notNull<std::string>();
+            null_percent = not_null_count;
+            null_percent = null_percent / this->mdataframe[this->mcolumns[i]].size<std::string>() * 100;
+
+            std::vector<std::pair<std::string, int>> modes = this->mdataframe[this->mcolumns[i]].modes<std::string>();
+            
+            std::cout << modes[0].first << " " << modes[0].second << std::endl;
+            std::cout << modes[1].first << " " << modes[1].second << std::endl << std::endl;
+
+            VariableResults variable_results(this->mcolumns[i], types[0], types[1], not_null_count, null_percent, unique_count, 
+                                                    "", "", "", "", "", "", "", modes[0].first, "", modes[0].second, modes[1].first, "", modes[1].second);
+
+            mvariable_results[this->mcolumns[i]] = variable_results;
+
+            
+        }
+    }
+}
+
+void Dataframe::displayVariableResults(std::string _result_path)
+{
+    std::ofstream result_file;
+    std::string seperator;
+
+    remove(_result_path.c_str());
+    result_file.open(_result_path, std::ios::out);
+
+    seperator = std::string(VariableResults::seperator_length , '-');
+
+    result_file << seperator << std::endl;
+    VariableResults::printHeader(result_file);
+    result_file << seperator << std::endl;
+
+    for (int i = 1; i < this->mcolumns.size(); i++)
+    {
+        if (this->mdataframe[this->mcolumns[i]].getType() == MType::TYPE_DOUBLE)
+        {            
+            mvariable_results[this->mcolumns[i]].print<double>(result_file);
+        }
+        else if (this->mdataframe[this->mcolumns[i]].getType() == MType::TYPE_STRING)
+        {
+            mvariable_results[this->mcolumns[i]].print<std::string>(result_file);
+        }
+    }
+
+    result_file << seperator << std::endl;
+
+    result_file.close();
+}
+
+void Dataframe::setVariableFeature(std::string _column, MDataType _type)
+{
+    this->mvariable_results[_column].setFeatureType(_type);
+}
+
+void Dataframe::setVariableDataType(std::string _column, MDataType _type)
+{
+    this->mvariable_results[_column].setDataType(_type);
 }

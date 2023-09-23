@@ -1,3 +1,6 @@
+#ifndef MTYPE_H
+#define MTYPE_H
+
 #include <string>
 #include <map>
 
@@ -15,3 +18,25 @@ std::map<MType, std::string> MTypes = {
         {MType::TYPE_NONE, "NONE"}
     };
 
+enum MDataType {
+    CATEGORICAL,
+    CONTINUOUS,
+    NUMERIC,
+    INTERVAL,
+    ORDINAL,
+    BINARY,
+    TEXTUAL,
+    NONE
+};
+
+std::map<MDataType, std::string> MDataTypes = {
+        {MDataType::CATEGORICAL, "CATEGORICAL"},
+        {MDataType::CONTINUOUS, "CONTINUOUS"},
+        {MDataType::NUMERIC, "NUMERIC"},
+        {MDataType::INTERVAL, "INTERVAL"},
+        {MDataType::ORDINAL, "ORDINAL"},
+        {MDataType::TEXTUAL, "TEXTUAL"},
+        {MDataType::BINARY, "BINARY"},
+        {MDataType::NONE, ""}
+    };
+#endif // MTYPE_H

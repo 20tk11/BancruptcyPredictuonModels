@@ -6,8 +6,10 @@
 #include <type_traits>
 #include <filesystem>
 #include "errorHandler.h"
+#include "variableResults.h"
 #include <fstream>
 #include <cstring> 
+#include "format.h"
 
 /// @brief Dataframe object that used to store data as columns, each columns has different names and specific types
 /// currently works best with integer, double and std::string types
@@ -39,6 +41,10 @@ class Dataframe
         /// @return Vector of elements splitted from input string
         std::vector<std::string> msplitString(std::string _input, char _delimiter);
 
+        std::map<std::string, VariableResults> mvariable_results  =
+        {
+        };
+
         /// @brief Gets print format: column size, and seperator count between content, header and footer
         /// @param _column_Lengths Width for each column
         /// @param _seperator_length Number of symbols needed to seperate header, content and footer seactions
@@ -54,25 +60,10 @@ class Dataframe
         /// @param _column_lengths Width for each column
         void mprintFooter(std::ofstream& _result_file, std::vector<int> _column_lengths);
 
-        /// @brief Checks if value is number
-        /// @param _str Textual value
-        /// @return True if it is number and false if not
-        bool misNumber(const std::string& _str);
-
-        /// @brief Checks if value is null
-        /// @param _element Textual value
-        /// @return True if the value is null and false if not
-        bool mcheckNull(std::string _element);
-
         /// @brief Prints Content section
         /// @param _result_file File where results are printed
         /// @param _column_lengths Width for each column
         void mprintContent(std::ofstream& _result_file, std::vector<int> _column_lengths);
-    
-        /// @brief Finds size of value in utf8 character set
-        /// @param _str Textual value
-        /// @return Size of textual value in UTF8 char set
-        int mutf8CharacterWidth(const std::string& _str);
 
         /// @brief Finds precision of double value
         /// @param _val Numeric value
@@ -148,7 +139,13 @@ class Dataframe
         /// @return Number of rows inside dataframe
         int size();
 
+        void analyseVariables();
 
+        void displayVariableResults(std::string _result_path = result_variable_path);
+
+        void setVariableFeature(std::string _column, MDataType _type);
+
+        void setVariableDataType(std::string _column, MDataType _type);
 };
 
 #include "../source/dataframe.cpp"

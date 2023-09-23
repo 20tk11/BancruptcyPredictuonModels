@@ -33,3 +33,9 @@ int ErrorHandler::error_invalid_element_type(std::string _element, std::string _
     std::cout << ERROR << " Can't set element - element (" << _element << ") is not valid, because element type(" << _type <<") is not valid";
     return 1;
 }
+
+int ErrorHandler::error_invalid_quantile(double _quantile)
+{
+    std::cout << ERROR << " Quantile exceed qiantile range of [0, 1], quantile range provided: " << _quantile;
+    return 1;
+}

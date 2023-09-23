@@ -6,6 +6,12 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
+#include <array>
+#include "typedef.h"
+#include <iomanip>
+#include "format.h"
+#include "errorHandler.h"
+#include <bits/stdc++.h>
 
 ///@brief Structure that is an vector and is able to store any type of values
 ///@param _items vectors where are stored any type values
@@ -30,6 +36,8 @@ private:
 
     /// @brief Type of Column
     MType mtype;
+
+    
 
     /// @brief Gets max length inside of Column's vector of T
     /// @tparam T Type of Column vector
@@ -56,6 +64,8 @@ private:
 
 public:
 
+    void* getTypedef();
+    
     /// @brief Used to set vector to T type Column
     /// @tparam T Type of Column vector
     /// @param _vec Vector of type T
@@ -121,6 +131,30 @@ public:
     /// @brief Finds the number of symbols the logest values is made of inside column
     /// @return Number of symbols the longest value is made of inside column
     int getLongestLength();
+
+    std::array<MDataType, 2> getDataType();
+
+    template<class T>
+    int notNull();
+
+    template<class T>
+    T min();
+
+    template<class T>
+    T max();
+
+    template<class T>
+    T quantile(double _quantile);
+
+    template<class T>
+    T stdDev(double _mean);
+
+    template<class T>
+    T Mean();
+
+    template<class T>
+    std::vector<std::pair<std::string, int>> modes();
+
 };
 
 template<class T>
